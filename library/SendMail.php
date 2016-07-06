@@ -8,7 +8,7 @@ mb_internal_encoding('UTF-8');
  */
 class SendMail
 {
-    private $transArr = array('&lt;'=>'<', '&gt;'=>'>', '&quot;'=>'"', '&#039;'=>"'", '&amp;'=>'&');
+    private $transArr = ['&lt;'=>'<', '&gt;'=>'>', '&quot;'=>'"', '&#039;'=>"'", '&amp;'=>'&'];
     private $fromEncoding = "UTF-8";
 
     private $from;
@@ -36,12 +36,12 @@ class SendMail
      */
     public function init()
     {
-        $this->to      = array();
-        $this->cc      = array();
-        $this->bcc     = array();
+        $this->to      = [];
+        $this->cc      = [];
+        $this->bcc     = [];
         $this->subject = null;
         $this->body    = null;
-        $this->header  = array();
+        $this->header  = [];
     }
 
     /**

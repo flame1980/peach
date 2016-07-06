@@ -26,7 +26,7 @@ class Dispatcher
 
         $pageParts = explode('/', $page);
 
-        $path = array();
+        $path = [];
         foreach ($pageParts as $val) {
             if ($val === reset($pageParts)) {
                 continue;   // 最初の1つは捨てる

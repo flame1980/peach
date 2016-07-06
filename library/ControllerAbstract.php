@@ -10,10 +10,10 @@ require_once('View.php');
 abstract class ControllerAbstract
 {
 
-    public $cssPreLoad = array();
-    public $cssPostLoad = array();
-    public $jsPreLoad = array();
-    public $jsPostLoad = array();
+    public $cssPreLoad = [];
+    public $cssPostLoad = [];
+    public $jsPreLoad = [];
+    public $jsPostLoad = [];
 
     protected $request;
     protected $session;
@@ -43,6 +43,9 @@ abstract class ControllerAbstract
 
         // コントローラの各処理が終わったらVIEWに値をセットする
         $this->view->set('relpath', $this->request->getRelpath());
+        $this->view->set('baseurl', $this->request->getBaseUrl());
+        $this->view->set('baseurlhttp', $this->request->getBaseUrl('http'));
+        $this->view->set('baseurlhttps', $this->request->getBaseUrl('https'));
         $this->view->set('cssPreLoad', $this->cssPreLoad);
         $this->view->set('cssPostLoad', $this->cssPostLoad);
         $this->view->set('jsPreLoad', $this->jsPreLoad);

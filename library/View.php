@@ -20,7 +20,7 @@ class View
      * @param array $extraParams
      * @return void
      */
-    public function __construct($extraParams = array())
+    public function __construct($extraParams = [])
     {
         $this->smarty = new Smarty;
 
