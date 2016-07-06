@@ -12,7 +12,7 @@ class Dispatcher
 
     public function __construct()
     {
-        $page = Request::getInstance()->getParam('_page_');
+        $page = Request::getInstance()->get('_page_');
         if (empty($page)) {
             $page = '/index.html';
         }

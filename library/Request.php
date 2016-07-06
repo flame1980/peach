@@ -11,18 +11,15 @@ class Request
      */
     private static $instance;
 
-    /*+
+    /**
      * メソッド
      */
     private $method;
 
-    /**
-     * パラメータ
-     */
-    private $params;
+    private $postParams;
+    private $getParams;
 
     private $basePath;
-    private $baseUrl;
 
     /**
      * インスタンス取得
@@ -45,58 +42,36 @@ class Request
     public function __construct()
     {
         $this->method = $_SERVER['REQUEST_METHOD'];
-        if ($this->method == 'POST') {
-            $this->params = $_POST;
+        $this->postParams = $_POST;
+        $this->getParams = $_GET;
+    }
+
+    /**
+     * $_GETの値を取得
+     */
+    public function get($key = null, $default = null)
+    {
+        if ($key === null) {
+            return $this->getParams;
+        } elseif (array_key_exists($key, $this->getParams)) {
+            return $this->getParams[$key];
         } else {
-            $this->params = $_GET;
+            return $default;
         }
     }
 
     /**
-     * 該当するキーのパラメータを取得
+     * $_POSTの値を取得
      */
-    public function getParam($key, $default = null)
+    public function post($key = null, $default = null)
     {
-        $ret = $default;
-        if ($this->hasParam($key)) {
-            $ret = $this->params[$key];
+        if ($key === null) {
+            return $this->postParams;
+        } elseif (array_key_exists($key, $this->postParams)) {
+            return $this->postParams[$key];
+        } else {
+            return $default;
         }
-        return $ret;
-    }
-
-    /**
-     * パラメータを全て取得
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-    /**
-     * パラメータをセット
-     */
-    public function setParam($key, $param)
-    {
-        $this->params[$key] = $param;
-    }
-
-    /**
-     * パラメータをセット
-     */
-    public function setParams($params)
-    {
-        $this->params = $params;
-    }
-
-    /**
-     * パラメータの存在チェック
-     */
-    public function hasParam($key)
-    {
-        if (array_key_exists($key, $this->params)) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -182,23 +157,25 @@ class Request
      *
      * @return string
      */
-    public function getBaseUrl()
+    public function getBaseUrl($protocol = null)
     {
-        if ($this->baseUrl == null) {
+        if ($protocol == 'http') {
+            $schema = 'http';
+        } elseif ($protocol == 'https') {
+            $schema = 'https';
+        } else {
             $schema = 'http';
             if ($this->isSsl()) {
                 $schema = 'https';
             }
-            $reqestPort = $_SERVER["SERVER_PORT"];
-            $port = '';
-            if (($schema == 'http' && $reqestPort != '80') || ($schema == 'https' && $reqestPort != '443')) {
-                $port = ':' . $_SERVER["SERVER_PORT"];
-            }
-            $path = trim($this->getBasePath(), '/');
-            $url = sprintf('%s://%s%s/%s', $schema, $_SERVER['SERVER_NAME'], $port, $path);
-            $this->baseUrl = trim($url, '/');
         }
-        return $this->baseUrl;
+
+        $reqestPort = $_SERVER["SERVER_PORT"];
+        $path = trim($this->getBasePath(), '/');
+        $url = sprintf('%s://%s/', $schema, $_SERVER['SERVER_NAME']);
+        // $this->baseUrl = trim($url, '/');
+
+        return $url;
     }
 
     /**
@@ -206,9 +183,13 @@ class Request
      */
     public function getRelpath()
     {
-        $relpath = '/';
+        $relpath = '';
         $basePath = $this->getBasePath();
-        $tmp = explode('/', preg_replace('/^\//', '', $basePath));
+        $tmp = [];
+        if (!empty($basePath)) {
+            $tmp = explode('/', preg_replace('/^\//', '', $basePath));
+        }
+
         $depth = count($tmp);
         $relpath .= str_repeat('../', $depth);
         return $relpath;
