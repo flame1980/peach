@@ -40,7 +40,7 @@ class Dispatcher
 
         $this->action = ucfirst(strtolower($action));
         $this->path = implode('/', $path);
-        Request::getInstance()->setBasePath(DS.$this->path);
+        Request::getInstance()->setBasePath($this->path);
     }
 
     public function dispatch()
