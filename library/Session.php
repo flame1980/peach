@@ -24,7 +24,7 @@ class Session
         return self::$instance;
     }
 
-    public function getParam($key, $default = null)
+    public function get($key, $default = null)
     {
         $ret = $default;
         if (array_key_exists($key, $_SESSION)) {
@@ -33,17 +33,17 @@ class Session
         return $ret;
     }
 
-    public function setParam($key, $data)
+    public function set($key, $data)
     {
         $_SESSION[$key] = $data;
     }
 
-    public function removeParam($key)
+    public function remove($key)
     {
         unset($_SESSION[$key]);
     }
 
-    public function hasParam($key)
+    public function has($key)
     {
         if (array_key_exists($key, $_SESSION)) {
             return true;
